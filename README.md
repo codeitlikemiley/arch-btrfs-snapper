@@ -176,77 +176,101 @@ vim /etc/systemd/journald.conf
 Storage=volatile
 ```
 
-# install network manager
+28. install network manager
+```sh
 systemctl enable NetworkManager
+```
 
-
+29. Install Linux LTS
+    
+```sh
 vim /etc/mkinitcpio.conf
 mkinitcpio -p linux-lts
+```
 
 
-
-#exit on arch-chroot
+30. exit on arch-chroot
+```sh
 exit
 umount -R /mnt
+```
 
-# dont exit unless we install a way to connect to internet :(
+31. Add new SUDO User
 
-)
-
-
-
-
+```sh
 useradd -m -g wheel uriah
 passwd uriah
 vim /etc/sudoers
+```
+
+<hr>
+
+## Arch After Install
+
+[Watch this](https://www.youtube.com/watch?v=TKdZiCTh3EM&feature=youtu.be&t=1218)
 
 
-
-After Installation
-https://www.youtube.com/watch?v=TKdZiCTh3EM&feature=youtu.be&t=1218
-
-Next Step
-
+1. Install Snapper
+```sh
 pacman -S snapper
 snapper -c root create-config /
 btrfs sub del /.snapshots/
 mkdir /.snapshots
+```
 
+2. Update Fstab
+   
+```sh
 vim  /etc/fstab
 add entry of .snapshots wuth subvol=@snapshots
 mount /.snapshots/
-
 df -Th
 snapper list
-No current snapshots
+```
 
+3. Update Grub
+```sh
 pacman -S grub-btrfs
-open this file
+# open this file
 vim /etc/grub.d/41_snapshots-btrfs
+```
 
+`/etc/grub.d/41_snapshots-btrfs` update this file
+
+```sh
 Set harmonized entries true on /etc/default/grub
 GRUB_BTRFS_CREATE_ONLY_HARMONIZED_ENTRIES="true"
 GRUB_BTRFS_LIMIT="10"
+```
 
+4.  Edit Root Snapper Config
 
-vim /etc/snapper/configs/root
+`vim /etc/snapper/configs/root`
 
+```sh
 NUMBER_CLEANUP="yes"
 NUMBER_MIN_AGE="0"
 NUMBER_LIMIT="12"
 NUMBER_LIMIT_IMPORTANT="3"
 
 TIMELINE_CREATE="no"
+```
 
+5. Check if Cron job is working
+
+```sh
 systemctl status cronie.service
-this should be running
+#this should be running
+```
 
 
-ONLY INSTALL THIS AFTER WE HAVE COMPLETED INSTALLING EVERYTHING
-FOR DEVELOPMENT TO SAVE SPACE
+
+## Installing Snapper Hooks
+
+```sh
 sudo pacman -S snap-pac
 Yay -y snap-pac-grub
-
+```
 there will be pre-and-post snapshots everytime you install  new pacman package
 
 
