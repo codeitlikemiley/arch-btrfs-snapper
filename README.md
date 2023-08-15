@@ -1,5 +1,8 @@
 # Special Arch Install With BTRFS on UEFI
 
+> Archlinux always break, if it break , you can easily rollback with BTRFS and Snapper
+> Even if your system is unbootable 
+
 1. set wifi password
 
 
